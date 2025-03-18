@@ -7,22 +7,25 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <!-- Music Autoplay using SoundCloud Embed -->
-  <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
+  <!-- Music Autoplay -->
+  <audio id="background-music" autoplay loop>
     <source src="https://soundcloud.com/matchstickpianoman/perfect-ed-sheeran?in=lestari-292014231/sets/love&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
   <!-- Content -->
   <div class="paper heart"></div>
-  
+
   <div class="paper">
     <p class="p1">That's only a few things </p>
-    <p class="p1">you don't want me to spend money on you right? but these are pure skills out of love...hope I made you smile❤️☺️</p>
+    <p class="p1">you don't want me to spend money on you right? but this are pure skills out of love...hope i made you smile❤️☺️<span style="color: red !important;"></span></p>
   </div>
-  
+
   <div class="paper">
-    <p class="p1">11th Jan </p>
-    <p class="p1">You know you are cute... you trying to book events or movies or candles, all this is a very nice moment. I always smile when I see you making efforts...(Awwww❤️🥰)</p>
+    <p class="p1">11th jan </p>
+    <p class="p1">you know you are cute.. you trying to book events or movie or candles all this is a very nice movements i always smile when i see you making efforts...(Awwww❤️🥰)<span style="color: red !important;"></span></p>
   </div>
-  
+
   <div class="paper">
     <p class="p1">24th Feb </p>
     <p class="p1">Ayee Deepak i feel bad... it's like your to do list is to get me a nice job nice life and then you avoid me or somthing...( the truth is yes i was about to do the same but you found out i still wonder how?🤔)<span style="color: red !important;"></span></p>
@@ -136,7 +139,17 @@
   <div class="paper">
     <p class="p1">Drag the papers to move!</p>
   </div>
-  
+
+  <script>
+    // Attempt to autoplay the music
+    document.addEventListener('DOMContentLoaded', function() {
+      var audio = document.getElementById('background-music');
+      audio.play().catch(function(error) {
+        console.log("Autoplay was prevented. Please interact with the page to play the audio.");
+      });
+    });
+  </script>
+
   <script src="./script.js"></script>
 </body>
 </html>
