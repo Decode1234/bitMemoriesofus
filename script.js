@@ -4,8 +4,6 @@ class Paper {
   constructor(paper) {
     this.paper = paper;
     this.holdingPaper = false;
-    this.mouseTouchX = 0;
-    this.mouseTouchY = 0;
     this.mouseX = 0;
     this.mouseY = 0;
     this.prevMouseX = 0;
@@ -15,76 +13,64 @@ class Paper {
     this.rotation = Math.random() * 30 - 15;
     this.currentPaperX = 0;
     this.currentPaperY = 0;
-    this.rotating = false;
     this.init();
   }
 
   init() {
+    this.paper.style.transform = `rotateZ(${this.rotation}deg)`;
     this.paper.addEventListener("mousedown", (e) => this.startDrag(e));
-    this.paper.addEventListener("touchstart", (e) => this.startTouch(e));
+    this.paper.addEventListener("touchstart", (e) => this.startDrag(e, true));
     document.addEventListener("mousemove", (e) => this.drag(e));
-    document.addEventListener("touchmove", (e) => this.dragTouch(e));
-    window.addEventListener("mouseup", () => this.endDrag());
-    window.addEventListener("touchend", () => this.endDrag());
+    document.addEventListener("touchmove", (e) => this.drag(e, true));
+    document.addEventListener("mouseup", () => this.stopDrag());
+    document.addEventListener("touchend", () => this.stopDrag());
   }
 
-  startDrag(e) {
-    if (this.holdingPaper) return;
+  startDrag(e, isTouch = false) {
     this.holdingPaper = true;
     this.paper.style.zIndex = highestZ++;
-    this.mouseTouchX = e.clientX;
-    this.mouseTouchY = e.clientY;
-    this.prevMouseX = this.mouseTouchX;
-    this.prevMouseY = this.mouseTouchY;
+    if (isTouch) {
+      this.mouseX = e.touches[0].clientX;
+      this.mouseY = e.touches[0].clientY;
+    } else {
+      this.mouseX = e.clientX;
+      this.mouseY = e.clientY;
+    }
+    this.prevMouseX = this.mouseX;
+    this.prevMouseY = this.mouseY;
   }
 
-  startTouch(e) {
-    if (this.holdingPaper) return;
-    this.holdingPaper = true;
-    this.paper.style.zIndex = highestZ++;
-    let touch = e.touches[0];
-    this.mouseTouchX = touch.clientX;
-    this.mouseTouchY = touch.clientY;
-    this.prevMouseX = this.mouseTouchX;
-    this.prevMouseY = this.mouseTouchY;
-  }
-
-  drag(e) {
+  drag(e, isTouch = false) {
     if (!this.holdingPaper) return;
-    this.mouseX = e.clientX;
-    this.mouseY = e.clientY;
-    this.movePaper();
-  }
-
-  dragTouch(e) {
-    if (!this.holdingPaper) return;
-    let touch = e.touches[0];
-    this.mouseX = touch.clientX;
-    this.mouseY = touch.clientY;
-    this.movePaper();
-  }
-
-  movePaper() {
+    if (isTouch) {
+      this.mouseX = e.touches[0].clientX;
+      this.mouseY = e.touches[0].clientY;
+    } else {
+      this.mouseX = e.clientX;
+      this.mouseY = e.clientY;
+    }
+    
     this.velX = this.mouseX - this.prevMouseX;
     this.velY = this.mouseY - this.prevMouseY;
     this.currentPaperX += this.velX;
     this.currentPaperY += this.velY;
     this.prevMouseX = this.mouseX;
     this.prevMouseY = this.mouseY;
-    this.paper.style.transform = `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotate(${this.rotation}deg)`;
+
+    this.paper.style.transform = `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
   }
 
-  endDrag() {
+  stopDrag() {
     this.holdingPaper = false;
   }
 }
 
 document.querySelectorAll(".paper").forEach((paper) => new Paper(paper));
 
-// Autoplay Music on User Interaction
-document.addEventListener("click", () => {
+// Audio Autoplay Fix
+window.addEventListener("click", () => {
   let audio = document.getElementById("bg-music");
   if (audio.paused) {
-    audio.play().catch((e) => console.log("Autoplay blocked: ", e));
+    audio.play().catch((e) => console.log("Autoplay prevented!", e));
   }
-});
+}, { once: true });
