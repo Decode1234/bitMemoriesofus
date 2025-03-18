@@ -12,7 +12,7 @@
 
   <!-- Message -->
   <div class="paper">
-    <p class="p1">Tap anywhere if music doesn't start automatically ❤️</p>
+    <p class="p1">Tap anywhere if music doesn’t start automatically ❤️</p>
   </div>
 
   <!-- SoundCloud Player (Hidden) -->
@@ -28,11 +28,11 @@
   </iframe>
 
   <script>
-    window.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
       const iframe = document.getElementById("scPlayer");
       const widget = SC.Widget(iframe);
 
-      // Try to autoplay
+      // Attempt autoplay immediately
       widget.play();
 
       // Backup: User taps anywhere to start music if autoplay fails
@@ -41,6 +41,11 @@
         document.body.removeEventListener("click", playMusic);
       }
       document.body.addEventListener("click", playMusic);
+
+      // Extra Fix: Restart music when it loads (for iOS)
+      widget.bind(SC.Widget.Events.READY, () => {
+        widget.play();
+      });
     });
   </script>
 
