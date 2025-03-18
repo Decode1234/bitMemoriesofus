@@ -9,27 +9,16 @@
   <style>
     /* Hide the SoundCloud player visually */
     #background-music {
-      display: none;
-    }
-
-    /* Style for the play button */
-    #play-button {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 10px 20px;
-      background: red;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      border-radius: 5px;
+      position: absolute;
+      width: 0;
+      height: 0;
+      visibility: hidden;
     }
   </style>
 </head>
 <body>
 
-  <!-- Hidden Music Player -->
+  <!-- Hidden SoundCloud Player -->
   <iframe 
     id="background-music"
     width="100%" height="166"
@@ -37,9 +26,6 @@
     allow="autoplay"
     src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/426027251&auto_play=false">
   </iframe>
-
-  <!-- Play Button -->
-  <button id="play-button">Play Music 🎵</button>
 
   <!-- Content -->
   <div class="paper heart"></div>
@@ -49,12 +35,12 @@
     <p class="p1">you don't want me to spend money on you right? but these are pure skills out of love...hope I made you smile❤️☺️</p>
   </div>
 
-  <div class="paper">
+<div class="paper">
     <p class="p1">11th Jan </p>
     <p class="p1">You know you are cute... you trying to book events or movies or candles, all this is a very nice moment. I always smile when I see you making efforts...(Awwww❤️🥰)</p>
   </div>
 
-<div class="paper">
+  <div class="paper">
     <p class="p1">24th Feb </p>
     <p class="p1">Ayee Deepak I feel bad... it's like your to-do list is to get me a nice job, nice life, and then you avoid me or something...( the truth is yes I was about to do the same but you found out I still wonder how?🤔)</p>
   </div>
@@ -163,18 +149,22 @@
     <p class="p1">21th jan </p>
     <p class="p1">I called you boss nd you didn't like it <span style="color: red !important;">🙂‍↔️</span></p>
   </div>
+
   
   <div class="paper">
     <p class="p1">Drag the papers to move!</p>
   </div>
 
   <script>
-    document.getElementById("play-button").addEventListener("click", function () {
+    // Force autoplay on page load
+    window.onload = function () {
       let iframe = document.getElementById("background-music");
       let widget = SC.Widget(iframe); // Use SoundCloud API to control player
-      widget.play(); // Start playing music
-      this.style.display = "none"; // Hide the button after clicking
-    });
+
+      setTimeout(() => {
+        widget.play(); // Start playing music after slight delay
+      }, 1000); // Delay to bypass browser restrictions
+    };
   </script>
 
   <!-- SoundCloud API -->
