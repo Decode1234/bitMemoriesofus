@@ -3,52 +3,44 @@ let highestZ = 1;
 class Paper {
   constructor(paper) {
     this.paper = paper;
-    this.holdingPaper = false;
-    this.mouseX = 0;
-    this.mouseY = 0;
-    this.prevMouseX = 0;
-    this.prevMouseY = 0;
-    this.velX = 0;
-    this.velY = 0;
-    this.rotation = Math.random() * 30 - 15;
-    this.currentPaperX = 0;
-    this.currentPaperY = 0;
-    this.rotating = false;
+    this.holding = false;
+    this.offsetX = 0;
+    this.offsetY = 0;
+    this.currentX = 0;
+    this.currentY = 0;
 
     this.init();
   }
 
   init() {
-    this.paper.addEventListener('mousedown', (e) => this.onMouseDown(e));
-    document.addEventListener('mousemove', (e) => this.onMouseMove(e));
-    window.addEventListener('mouseup', () => this.onMouseUp());
+    this.paper.addEventListener('mousedown', (e) => this.startDrag(e));
+    this.paper.addEventListener('touchstart', (e) => this.startDrag(e.touches[0]));
+
+    document.addEventListener('mousemove', (e) => this.drag(e));
+    document.addEventListener('touchmove', (e) => this.drag(e.touches[0]));
+
+    document.addEventListener('mouseup', () => this.endDrag());
+    document.addEventListener('touchend', () => this.endDrag());
   }
 
-  onMouseDown(e) {
-    if (this.holdingPaper) return;
-    
-    this.holdingPaper = true;
+  startDrag(e) {
+    this.holding = true;
     this.paper.style.zIndex = highestZ++;
-    this.prevMouseX = e.clientX;
-    this.prevMouseY = e.clientY;
+    this.offsetX = e.clientX - this.currentX;
+    this.offsetY = e.clientY - this.currentY;
   }
 
-  onMouseMove(e) {
-    if (!this.holdingPaper) return;
+  drag(e) {
+    if (!this.holding) return;
+    e.preventDefault();
     
-    this.velX = e.clientX - this.prevMouseX;
-    this.velY = e.clientY - this.prevMouseY;
-    this.currentPaperX += this.velX;
-    this.currentPaperY += this.velY;
-
-    this.paper.style.transform = `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotate(${this.rotation}deg)`;
-
-    this.prevMouseX = e.clientX;
-    this.prevMouseY = e.clientY;
+    this.currentX = e.clientX - this.offsetX;
+    this.currentY = e.clientY - this.offsetY;
+    this.paper.style.transform = `translate(${this.currentX}px, ${this.currentY}px)`;
   }
 
-  onMouseUp() {
-    this.holdingPaper = false;
+  endDrag() {
+    this.holding = false;
   }
 }
 
