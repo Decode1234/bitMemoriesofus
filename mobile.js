@@ -49,7 +49,7 @@ class Paper {
         this.prevTouchX = this.touchMoveX;
         this.prevTouchY = this.touchMoveY;
 
-        paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
+        paper.style.transform = translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg);
       }
     })
 
