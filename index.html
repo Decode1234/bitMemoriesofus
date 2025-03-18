@@ -8,8 +8,8 @@
 </head>
 <body>
   <!-- Music Autoplay -->
-  <audio id="background-music" autoplay loop>
-    <source src="https://soundcloud.com/matchstickpianoman/perfect-ed-sheeran?in=lestari-292014231/sets/love&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" type="audio/mpeg">
+  <audio id="background-music" loop>
+    <source src="your-audio-file.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
@@ -17,13 +17,13 @@
   <div class="paper heart"></div>
 
   <div class="paper">
-    <p class="p1">That's only a few things </p>
-    <p class="p1">you don't want me to spend money on you right? but this are pure skills out of love...hope i made you smile❤️☺️<span style="color: red !important;"></span></p>
+    <p class="p1">That's only a few things...</p>
+    <p class="p1">Hope I made you smile ❤️☺️</p>
   </div>
 
   <div class="paper">
-    <p class="p1">11th jan </p>
-    <p class="p1">you know you are cute.. you trying to book events or movie or candles all this is a very nice movements i always smile when i see you making efforts...(Awwww❤️🥰)<span style="color: red !important;"></span></p>
+    <p class="p1">11th Jan</p>
+    <p class="p1">Cute moments! (Awwww❤️🥰)</p>
   </div>
 
   <div class="paper">
@@ -135,19 +135,26 @@
     <p class="p1">21th jan </p>
     <p class="p1">I called you boss nd you didn't like it <span style="color: red !important;">🙂‍↔️</span></p>
   </div>
-
+  
   <div class="paper">
     <p class="p1">Drag the papers to move!</p>
   </div>
 
   <script>
-    // Attempt to autoplay the music
-    document.addEventListener('DOMContentLoaded', function() {
-      var audio = document.getElementById('background-music');
-      audio.play().catch(function(error) {
-        console.log("Autoplay was prevented. Please interact with the page to play the audio.");
-      });
-    });
+    window.onload = function() {
+      let audio = document.getElementById('background-music');
+      let playPromise = audio.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          console.log("Music is playing.");
+        }).catch(() => {
+          document.body.addEventListener('click', () => {
+            audio.play();
+          }, { once: true });
+        });
+      }
+    };
   </script>
 
   <script src="./script.js"></script>
