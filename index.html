@@ -7,23 +7,24 @@
   <link rel="stylesheet" href="./style.css">
   
   <style>
-    /* Completely hide the SoundCloud player */
+    /* Hide the SoundCloud player visually */
     #background-music {
-      position: fixed;
+      position: absolute;
       width: 0;
       height: 0;
-      overflow: hidden;
       visibility: hidden;
     }
   </style>
 </head>
 <body>
 
-  <!-- Fully Hidden Music Player -->
+  <!-- Hidden Music Player -->
   <iframe 
     id="background-music"
+    width="0" height="0"
     scrolling="no" frameborder="no" allow="autoplay"
-    src="https://soundcloud.com/matchstickpianoman/perfect-ed-sheeran?in=lestari-292014231/sets/love&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing">
+    style="position: absolute; visibility: hidden;"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/426027251&auto_play=true">
   </iframe>
 
   <!-- Content -->
@@ -39,7 +40,7 @@
     <p class="p1">You know you are cute... you trying to book events or movies or candles, all this is a very nice moment. I always smile when I see you making efforts...(Awwww❤️🥰)</p>
   </div>
 
-  <div class="paper">
+<div class="paper">
     <p class="p1">24th Feb </p>
     <p class="p1">Ayee Deepak I feel bad... it's like your to-do list is to get me a nice job, nice life, and then you avoid me or something...( the truth is yes I was about to do the same but you found out I still wonder how?🤔)</p>
   </div>
@@ -148,11 +149,26 @@
     <p class="p1">21th jan </p>
     <p class="p1">I called you boss nd you didn't like it <span style="color: red !important;">🙂‍↔️</span></p>
   </div>
+
   
   <div class="paper">
     <p class="p1">Drag the papers to move!</p>
   </div>
 
-  <script src="./script.js"></script>
+  <script>
+    // Ensuring autoplay works when the page is interacted with
+    document.addEventListener("DOMContentLoaded", function () {
+      let music = document.getElementById("background-music");
+      let playMusic = function () {
+        let iframe = music.contentWindow;
+        if (iframe) {
+          iframe.postMessage('{"method":"play"}', '*');
+        }
+      };
+
+      document.body.addEventListener("click", playMusic, { once: true });
+    });
+  </script>
+
 </body>
 </html>
