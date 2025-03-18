@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>D-honey - bitofus ❤️</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Short+Stack&family=Homemade+Apple&display=swap">
   <link rel="stylesheet" href="./style.css">
@@ -9,27 +10,21 @@
 </head>
 <body>
 
-  <!-- A pen by Developer Rahul -->
-  <div class="paper heart"></div>
-
+  <!-- Message -->
   <div class="paper">
-    <p class="p1">That's only a few things</p>
-    <p class="p1">You don't want me to spend money on you, right? But these are pure skills out of love... Hope I made you smile ❤️☺️</p>
+    <p class="p1">Tap anywhere if music doesn't start automatically ❤️</p>
   </div>
 
-  <div class="paper">
-    <p class="p1">Tap anywhere to play music!</p>
-  </div>
-
-  <!-- SoundCloud Player -->
+  <!-- SoundCloud Player (Hidden) -->
   <iframe 
-    id="scPlayer" 
-    width="100%" 
-    height="166" 
-    scrolling="no" 
+    id="scPlayer"
+    width="100%"
+    height="166"
+    scrolling="no"
     frameborder="no"
     allow="autoplay"
-    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/matchstickpianoman/perfect-ed-sheeran%3Fin%3Dlestari-292014231/sets/love">
+    style="opacity: 0; position: absolute; pointer-events: none;" 
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/matchstickpianoman/perfect-ed-sheeran%3Fin%3Dlestari-292014231/sets/love&auto_play=true">
   </iframe>
 
   <script>
@@ -37,13 +32,14 @@
       const iframe = document.getElementById("scPlayer");
       const widget = SC.Widget(iframe);
 
-      // Function to play the music
+      // Try to autoplay
+      widget.play();
+
+      // Backup: User taps anywhere to start music if autoplay fails
       function playMusic() {
         widget.play();
-        document.body.removeEventListener("click", playMusic); // Remove listener after first click
+        document.body.removeEventListener("click", playMusic);
       }
-
-      // Add click listener (Required for Mobile Autoplay)
       document.body.addEventListener("click", playMusic);
     });
   </script>
