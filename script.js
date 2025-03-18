@@ -1,92 +1,82 @@
 let highestZ = 1;
 
 class Paper {
-    constructor(paper) {
-        this.paper = paper;
-        this.holdingPaper = false;
-        this.mouseX = 0;
-        this.mouseY = 0;
-        this.prevMouseX = 0;
-        this.prevMouseY = 0;
-        this.velX = 0;
-        this.velY = 0;
-        this.rotation = Math.random() * 30 - 15;
-        this.currentPaperX = 0;
-        this.currentPaperY = 0;
-        this.init();
-    }
+  holdingPaper = false;
+  mouseTouchX = 0;
+  mouseTouchY = 0;
+  mouseX = 0;
+  mouseY = 0;
+  prevMouseX = 0;
+  prevMouseY = 0;
+  velX = 0;
+  velY = 0;
+  rotation = Math.random() * 30 - 15;
+  currentPaperX = 0;
+  currentPaperY = 0;
+  rotating = false;
 
-    init() {
-        this.paper.style.transform = `rotateZ(${this.rotation}deg)`;
-
-        // Drag events
-        this.paper.addEventListener("mousedown", (e) => this.startDrag(e, false));
-        this.paper.addEventListener("touchstart", (e) => this.startDrag(e, true));
-    }
-
-    startDrag(e, isTouch = false) {
-        this.holdingPaper = true;
-        this.paper.style.zIndex = highestZ++;
-
-        if (isTouch) {
-            this.mouseX = e.touches[0].clientX;
-            this.mouseY = e.touches[0].clientY;
-        } else {
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
-        }
-        this.prevMouseX = this.mouseX;
-        this.prevMouseY = this.mouseY;
-
-        document.addEventListener(isTouch ? "touchmove" : "mousemove", this.dragHandler);
-        document.addEventListener(isTouch ? "touchend" : "mouseup", this.stopDragHandler);
-    }
-
-    dragHandler = (e) => {
-        if (!this.holdingPaper) return;
+  init(paper) {
+    document.addEventListener('mousemove', (e) => {
+      if(!this.rotating) {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
         
-        if (e.touches) {
-            this.mouseX = e.touches[0].clientX;
-            this.mouseY = e.touches[0].clientY;
-        } else {
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
-        }
-
         this.velX = this.mouseX - this.prevMouseX;
         this.velY = this.mouseY - this.prevMouseY;
-        this.currentPaperX += this.velX;
-        this.currentPaperY += this.velY;
+      }
+        
+      const dirX = e.clientX - this.mouseTouchX;
+      const dirY = e.clientY - this.mouseTouchY;
+      const dirLength = Math.sqrt(dirX*dirX+dirY*dirY);
+      const dirNormalizedX = dirX / dirLength;
+      const dirNormalizedY = dirY / dirLength;
+
+      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
+      let degrees = 180 * angle / Math.PI;
+      degrees = (360 + Math.round(degrees)) % 360;
+      if(this.rotating) {
+        this.rotation = degrees;
+      }
+
+      if(this.holdingPaper) {
+        if(!this.rotating) {
+          this.currentPaperX += this.velX;
+          this.currentPaperY += this.velY;
+        }
         this.prevMouseX = this.mouseX;
         this.prevMouseY = this.mouseY;
 
-        this.paper.style.transform = `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
-    };
+        paper.style.transform = translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg);
+      }
+    })
 
-    stopDragHandler = () => {
-        this.holdingPaper = false;
-        document.removeEventListener("mousemove", this.dragHandler);
-        document.removeEventListener("mouseup", this.stopDragHandler);
-        document.removeEventListener("touchmove", this.dragHandler);
-        document.removeEventListener("touchend", this.stopDragHandler);
-    };
+    paper.addEventListener('mousedown', (e) => {
+      if(this.holdingPaper) return; 
+      this.holdingPaper = true;
+      
+      paper.style.zIndex = highestZ;
+      highestZ += 1;
+      
+      if(e.button === 0) {
+        this.mouseTouchX = this.mouseX;
+        this.mouseTouchY = this.mouseY;
+        this.prevMouseX = this.mouseX;
+        this.prevMouseY = this.mouseY;
+      }
+      if(e.button === 2) {
+        this.rotating = true;
+      }
+    });
+    window.addEventListener('mouseup', () => {
+      this.holdingPaper = false;
+      this.rotating = false;
+    });
+  }
 }
 
-document.querySelectorAll(".paper").forEach((paper) => new Paper(paper));
+const papers = Array.from(document.querySelectorAll('.paper'));
 
-/* ✅ AutoPlay Fix */
-function enableAudio() {
-    let audio = document.getElementById("bg-music");
-    if (audio) {
-        audio.play().catch((e) => console.log("Autoplay prevented!", e));
-    }
-
-    let soundcloudIframe = document.getElementById("soundcloud-player");
-    if (soundcloudIframe) {
-        let overlay = document.getElementById("sc-overlay");
-        overlay.style.display = "none";
-    }
-}
-
-// Enable audio on first user interaction
-window.addEventListener("click", enableAudio, { once: true });
+papers.forEach(paper => {
+  const p = new Paper();
+  p.init(paper);
+});
